@@ -5,6 +5,8 @@ class UsersController < ApplicationController
         current_user = User.find_by(email: params[:email])
         @body = UserApi::UserData.new.user_data(current_user)
         format.json { render json: @body, status: 'success' }
+        @calendars = current_user.calendars
+        format.json { render json: @calendars, status: 'success' }
       else
         format.json { render json: current_user, status: 'false' }
       end
