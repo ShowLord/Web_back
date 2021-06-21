@@ -1,10 +1,10 @@
 class User::UserFactory
-  def user_dat(current_user)
+  def create_user_params(user)
     {
-      user_id: current_user.id,
-      name: current_user.name,
-      email: current_user.email,
-      avatar_url: current_user.avatar_url
+      user_id: user.id,
+      name: user.name,
+      email: user.email,
+      avatar_url: user.avatar_url
     }
   end
 end

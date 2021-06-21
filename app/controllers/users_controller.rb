@@ -1,26 +1,33 @@
 class UsersController < ApplicationController
   def index(params)
     respond_to do |format|
-      if User.find_by(email: params[:email]).present?
-        current_user = User.find_by(email: params[:email])
-        @body = UserApi::UserData.new.user_data(current_user)
-        format.json { render json: @body, status: 'success' }
-        @calendars = current_user.calendars
+      user = User.login(params[:user])
+      if user
+        @body = UserApi::UserData.new.user_data(user)
+        session[:user9527] = user.id
+        format.json { render json: @body, status: 'success', session: session[:user9527] }
+        @calendars = user.calendars
         format.json { render json: @calendars, status: 'success' }
       else
-        format.json { render json: current_user, status: 'false' }
+        format.json { render json: user, status: 'false' }
       end
     end
   end
 
-  def create(params)
-    @new_user = User.new(params)
+  def create
+    @new_user = User.new(user_params)
     respond_to do |format|
-      if new_user.save
+      if @new_user.save
         format.json { render json: @new_user, status: 'success' }
       else
         format.json { render json: @new_user.errors, status: 'false' }
       end
     end
+  end
+
+  private
+
+  def user_params
+    params.require(:user).permit(:email, :password, :name, :avatar_url)
   end
 end

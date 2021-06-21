@@ -1,4 +1,5 @@
 class CalendarsController < ApplicationController
+  before_action :login_required
   def create(params)
     respond_to do |format|
       user = User.find(email: params[:collaborator])
